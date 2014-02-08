@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Feb  2 11:24:42 2014
+Created on Sun Feb  8 4:06 2014
 
-@author: YOUR NAME HERE
+@author: Philip Seger
 """
 
 # you may find it useful to import these variables (although you are not required to use them)
@@ -26,7 +26,26 @@ def coding_strand_to_AA(dna):
                  the input DNA fragment
     """
     
-    # YOUR IMPLEMENTATION HERE
+    #take dna and expand all values into a list 'sequence'
+    sequence = list(dna)
+    #then need to find length of list, which when divided by 3 tells us number of amino acids
+    length = len(sequence)
+    length = length / 3
+    #eventually going to be used to store the AA pairs
+    amino = []
+    #using a while loop for going through each AA pair
+    b = 1
+    while b <= length:
+        b = b + 1
+        #variable 'n' used for splice segments
+        n = 0
+        t = sequence[n:3]
+        n = n + 3
+        #now need to search amino_acids for splice segment
+        splice = ''
+        
+
+
 
 def coding_strand_to_AA_unit_tests():
     """ Unit tests for the coding_strand_to_AA function """
