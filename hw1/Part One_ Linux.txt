@@ -1,0 +1,21 @@
+Part One: Linux
+a) Find directory with pwd
+b) Go to home directory either with cd or cd ~
+c) To list contents, us ls
+
+Part Two: Python
+a)In interactive mode you type commads at the Python prompt; in script mode the interpreter reads code from a file.
+Semantic errors are often hard to find because you don't get any error messages.
+b)Math:
+10/1.61 = 6.211
+43.5/6.211 = 7.00 
+Pace: 7 minutes per mile
+
+60/43.5 = 1.379
+10/1.61 = 6.211
+6.211*1.379 = 8.565
+Speed: 8.565 miles per hour
+
+Part Three: Git
+a)A repository is a collection of files.
+b)git help commit
