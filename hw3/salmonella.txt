@@ -1,0 +1,5 @@
+From my sequence, I got genes that control:
+needle length control protein [Salmonella enterica subsp. enterica serovar Typhimurium]
+antigen presentation protein SpaN [Salmonella enterica]>gb|ESF69790.1
+Invasion protein InvJ [Salmonella enterica] >gb|EHC53263.1|Invasion protein InvJ
+and more similarily. They all are genes found in Salmonella enterica

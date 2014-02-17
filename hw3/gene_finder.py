@@ -122,8 +122,10 @@ def rest_of_ORF(dna):
 def rest_of_ORF_unit_tests():
     """ Unit tests for the rest_of_ORF function """
         
-    # YOUR IMPLEMENTATION HERE
-        
+    print 'input: ATGCTAATATGAA, expected output: ATGCTAATA, actual: ' + rest_of_ORF('ATGCTAATATGAA')    
+    print 'input: ATGTTTTAG, expected output: ATGTTT, actual: ' + rest_of_ORF('ATGTTTTAG')
+       
+
 def find_all_ORFs_oneframe(dna):
     """ Finds all non-nested open reading frames in the given DNA sequence and returns
         them as a list.  This function should only find ORFs that are in the default
@@ -135,12 +137,30 @@ def find_all_ORFs_oneframe(dna):
         returns: a list of non-nested ORFs
     """
      
-    # YOUR IMPLEMENTATION HERE        
+    #create an empty list for use later
+    orf_list = []
+    i = 0 
+    while i <= (len(dna)):
+        #read only in groups of 3 for codons
+        index = 3 * i 
+        #start reading at ATG
+        if dna[index:index + 3] == 'ATG': 
+            string_of_orf = rest_of_ORF(dna[index:len(dna)]) 
+            #throw sequence into orf_list
+            orf_list.append(string_of_orf) 
+            i = i + len(string_of_orf) / 3 
+        else:
+            #used if there is no ATG in group
+            i += 1 
+    
+    return orf_list
      
+
 def find_all_ORFs_oneframe_unit_tests():
     """ Unit tests for the find_all_ORFs_oneframe function """
 
-    # YOUR IMPLEMENTATION HERE
+    print 'input: ACCTCAATGTTCCAGGTGTAAACCGAGGTCATGCAAAGATAA, expected output: ATGTTCCAGGTG, ATGCAAAGA, actual: ' + find_all_ORFs_oneframe('ACCTCAATGTTCCAGGTGTAAACCGAGGTCATGCAAAGATAA')
+
 
 def find_all_ORFs(dna):
     """ Finds all non-nested open reading frames in the given DNA sequence in all 3
@@ -152,12 +172,20 @@ def find_all_ORFs(dna):
         returns: a list of non-nested ORFs
     """
      
-    # YOUR IMPLEMENTATION HERE
+    #create an empty list for use later
+    codon_group = [] 
+    #loop through each frame, from 0 to 3
+    for i in range(0,3): 
+        codon_group += find_all_ORFs_oneframe(dna[i:]) 
+    
+    return codon_group
+
 
 def find_all_ORFs_unit_tests():
     """ Unit tests for the find_all_ORFs function """
         
-    # YOUR IMPLEMENTATION HERE
+    print 'input: AATGCCGTGCCATAAGTTCAGATACCATAGGCTAAAATGAAATGGTCATGGATACCAAATAA, expected output: ATGAAATGGTCATGGATACCAAAT, ATGCCGTGCCATAAGTTCAGATACCATAGGCTAAAA, ATGGTCATGGATACCAAA, actual: ' + find_all_ORFs('AATGCCGTGCCATAAGTTCAGATACCATAGGCTAAAATGAAATGGTCATGGATACCAAATAA')
+
 
 def find_all_ORFs_both_strands(dna):
     """ Finds all non-nested open reading frames in the given DNA sequence on both
@@ -166,24 +194,51 @@ def find_all_ORFs_both_strands(dna):
         dna: a DNA sequence
         returns: a list of non-nested ORFs
     """
-     
-    # YOUR IMPLEMENTATION HERE
+    
+    #empty lists for forward and back 
+    codons_forward = [] 
+    codons_backward = [] 
+    #empty total list
+    codons_complete = [] 
+    #find first codons forward
+    codons_forward += find_all_ORFs(dna)
+    #find second codons backward 
+    codons_backward += find_all_ORFs(get_reverse_complement(dna)) 
+    #all the codons in one list
+    all_the_codons = codons_forward + codons_backward 
+    
+    return all_the_codons
+
 
 def find_all_ORFs_both_strands_unit_tests():
     """ Unit tests for the find_all_ORFs_both_strands function """
 
-    # YOUR IMPLEMENTATION HERE
+    print 'input: ATGCCGATAGATCGACATGACATGAGATAC, expected output: ATGCCGATAGATCGACATGACATGAGATAC, ATGACA, ATGTCGATCTATCGGCAT, ATGTCATGTCGATCTATCGGC, actual: ' + find_all_ORFs_both_strands('ATGCCGATAGATCGACATGACATGAGATAC')
+
 
 def longest_ORF(dna):
     """ Finds the longest ORF on both strands of the specified DNA and returns it
         as a string"""
 
-    # YOUR IMPLEMENTATION HERE
+    #set all_the_codons to all ORFs from before
+    all_the_codons = find_all_ORFs_both_strands(dna) 
+    #return an empty string if no ATG
+    if not all_the_codons: 
+        return '' 
+    #sets start of longest codons as 0
+    longest = all_the_codons[0] 
+    #determines longer codons and replaces longest if longer than previous
+    for i in range(1, len(all_the_codons)):
+        if len(all_the_codons[i]) > len(longest):
+            longest = all_the_codons[i] 
+    
+    return longest
+
 
 def longest_ORF_unit_tests():
     """ Unit tests for the longest_ORF function """
 
-    # YOUR IMPLEMENTATION HERE
+    print 'input: ATACGACATAGTACATGCAATGCATGAAT, expected output: ATGCATTGCATGTACTATGTCGTA, actual: ' + longest_ORF('ATACGACATAGTACATGCAATGCATGAAT')
 
 def longest_ORF_noncoding(dna, num_trials):
     """ Computes the maximum length of the longest ORF over num_trials shuffles
@@ -193,7 +248,22 @@ def longest_ORF_noncoding(dna, num_trials):
         num_trials: the number of random shuffles
         returns: the maximum length longest ORF """
 
-    # YOUR IMPLEMENTATION HERE
+    #need random numbers, so need random!
+    import random
+    output = 0
+    #turn dna into a list and set to all_codons
+    all_codons = list(dna) 
+    for i in range(num_trials):
+        #randomize the codons
+        random.shuffle(all_codons) 
+        #put lists into one
+        random_dna = collapse(all_codons)
+        longest = longest_ORF(random_dna) 
+        if len(longest) > output:
+            #if new is longer than old, replace old with new
+            output = len(longest) 
+    
+    return output
 
 def gene_finder(dna, threshold):
     """ Returns the amino acid sequences coded by all genes that have an ORF
@@ -206,4 +276,24 @@ def gene_finder(dna, threshold):
                  length specified.
     """
 
-    # YOUR IMPLEMENTATION HERE
+    #empty aa list
+    complete_aa = []
+    aa_list = find_all_ORFs_both_strands(dna) 
+    for i in range(len(aa_list)):
+        #add sequence if longer than threshold
+        if len(aa_list[i]) >= threshold: 
+            strand = aa_list[i]
+            aa = coding_strand_to_AA(strand)
+            #string added to list 
+            complete_aa.append(aa) 
+    
+    return complete_aa
+    
+        
+    #ran 1500 trials to find threshold, got 834, then 888, using 834
+    #print longest_ORF_noncoding(dna,1500)
+    #outputs aa
+    #print gene_finder(dna,834) 
+    #['MGDVSAVSSSGNILLPQQDEVGGLSEALKKAVEKHKTEYSGDKKDRDYGDAFVMHKETALPLLLAAWRHGAPAKSEHHNGNVSGLHHNGKSELRIAEKLLKVTAEKSVGLISAEAKVDKSAALLSSKNRPLESVSGKKLSADLKAVESVSEVTDNATGISDDNIKALPGDNKAIAGEGVRKEGAPLARDVAPARMAAANTGKPEDKDHKKVKDVSQLPLQPTTIADLSQLTGGDEKMPLAAQSKPMMTIFPTADGVKGEDSSLTYRFQRWGNDYSVNIQARQAGEFSLIPSNTQVEHRLHDQWQNGNPQRWHLTRDDQQNPQQQQHRQQSGEEDDA',
+    # 'MSLRVRQIDRREWLLAQTATECQRHGREATLEYPTRQGMWVRLSDAEKRWSAWIKPGDWLEHVSPALAGAAVSAGAEHLVVPWLAATERPFELPVPHLSCRRLCVENPVPGSALPEGKLLHIMSDRGGLWFEHLPELPAVGGGRPKMLRWPLRFVIGSSDTQRSLLGRIGIGDVLLIRTSRAEVYCYAKKLGHFNRVEGGIIVETLDIQHIEEENNTTETAETLPGLNQLPVKLEFVLYRKNVTLAELEAMGQQQLLSLPTNAELNVEIMANGVLLGNGELVQMNDTLGVEIHEWLSESGNGE', 
+    # 'MSSNKTEKPTKKRLEDSAKKGQSFKSKDLIIACLTLGGIAYLVSYGSFNEFMGIIKIIIADNFDQSMADYSLAVFGIGLKYLIPFMLLCLVCSALPALLQAGFVLATEALKPNLSALNPVEGAKKLFSMRTVKDTVKTLLYLSSFVVAAIICWKKYKVEIFSQLNGNIVGIAVIWRELLLALVLTCLACALIVLLLDAIAEYFLTMKDMKMDKEEVKREMKEQEGNPEVKSKRREVHMEILSEQVKSDIENSRLIVANPTHITIGIYFKPELMPIPMISVYETNQRALAVRAYAEKVGVPVIVDIKLARSLFKTHRRYDLVSLEEIDEVLRLLVWLEEVENAGKDVIQPQENEVRH']
