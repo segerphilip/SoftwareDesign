@@ -5,6 +5,8 @@ Created on Sun Feb  8 4:06 2014
 @author: Philip Seger
 """
 
+from load import load_seq
+dna = load_seq("./data/X73525.fa")
 # you may find it useful to import these variables (although you are not required to use them)
 from amino_acids import aa, codons
 
@@ -33,24 +35,28 @@ def coding_strand_to_AA(dna):
     length = length / 3
     #eventually going to be used to store the AA pairs
     amino = []
-    #using a while loop for going through each AA pair
-    b = 1
-    while b <= length:
-        b = b + 1
-        #variable 'n' used for splice segments
-        n = 0
-        t = sequence[n:3]
-        n = n + 3
-        #now need to search amino_acids for splice segment
-        splice = ''
-        
-
+    amino_acid_string = ''
+    #using a for loop for going through each AA pair
+    for b in range (length):
+        #start and stop of codons
+        start = 3 * b
+        end = 3 * b + 3
+        #amino is list of codons
+        amino.append(dna[start:end])
+        for index in range (len(codons)):
+            #searches the list for the codon
+            if amino[b] in codons[index]:
+                #if found, adds proper aa to list
+                amino_acid_string += (aa[index])
+    return amino_acid_string
 
 
 def coding_strand_to_AA_unit_tests():
     """ Unit tests for the coding_strand_to_AA function """
-        
-    # YOUR IMPLEMENTATION HERE
+    
+    print 'input: ATGCCGATACTG, expected output: MPIL, actual: ' + coding_strand_to_AA('ATGCCGATACTG')    
+    print 'input: CGGTAGGAACAA, expected output: R|EQ, actual: ' + coding_strand_to_AA('CGGTAGGAACAA')    
+    
 
 def get_reverse_complement(dna):
     """ Computes the reverse complementary sequence of DNA for the specfied DNA
@@ -59,13 +65,33 @@ def get_reverse_complement(dna):
         dna: a DNA sequence represented as a string
         returns: the reverse complementary DNA sequence represented as a string
     """
-    
-    # YOUR IMPLEMENTATION HERE
+    #empty string for eventual reverse sequence
+    new_dna = ''
+    #we want the reverse, so the while loop will count down
+    i = len(dna) - 1
+    while i >= 0:
+        #if last one is A, changes to T and counts down one and then moves on
+        if dna[i] == 'A':
+            new_dna += ('T')
+            i -= 1
+        elif dna[i] == 'T':
+            new_dna += ('A')
+            i -= 1
+        elif dna[i] == 'C':
+            new_dna += ('G')
+            i -= 1
+        elif dna[i] == 'G':
+            new_dna += ('C')
+            i -= 1
+    #return the resulting sequence
+    return new_dna
+
     
 def get_reverse_complement_unit_tests():
     """ Unit tests for the get_complement function """
         
-    # YOUR IMPLEMENTATION HERE    
+    print 'input: ATGCCGATACTG, expected output: CAGTATCGGCAT, actual: ' + get_reverse_complement('ATGCCGATACTG')    
+    print 'input: CGGTAGGAACAA, expected output: TTGTTCCTACCG, actual: ' + get_reverse_complement('CGGTAGGAACAA')    
 
 def rest_of_ORF(dna):
     """ Takes a DNA sequence that is assumed to begin with a start codon and returns
@@ -76,7 +102,22 @@ def rest_of_ORF(dna):
         returns: the open reading frame represented as a string
     """
     
-    # YOUR IMPLEMENTATION HERE
+    #list for the codons
+    codons = [None] * int(len(dna) / 3) 
+    #empty list for open reading frames
+    ORF = [] 
+    for i in range(int(len(dna) / 3)):
+        #reads in groups of 3
+        codons[i] = dna[i * 3:i * 3 + 3] 
+        #stops reading if it reaches the proper stop codons
+        if codons[i] == 'TAG' or codons[i] == 'TAA' or codons[i] == 'TGA': 
+            break
+        else:
+            ORF.append(codons[i])
+    #creating a string output
+    output_ORF = ''.join(ORF) 
+    return output_ORF
+
 
 def rest_of_ORF_unit_tests():
     """ Unit tests for the rest_of_ORF function """
