@@ -3,6 +3,8 @@
 Created on Sun Feb  8 4:06 2014
 
 @author: Philip Seger
+@graded_by: Aman Kapur
+
 """
 
 from load import load_seq
