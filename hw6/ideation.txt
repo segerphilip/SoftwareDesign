@@ -1,0 +1,20 @@
+classes needed:
+	ImpossibleGameModel
+
+	PointerArrow
+
+	Obstacles
+
+	PyGameHitDetection
+
+	PyGameImpossibleGameView
+
+	PyGameKeyboardController
+
+	__main__
+
+
+
+Space bar resets everything
+
+Game over screen???
