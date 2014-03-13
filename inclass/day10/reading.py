@@ -15,16 +15,12 @@ full_text[end_of_boilerplate+4:]
 end_of_novel = full_text.index("End of Project Gutenberg's")
 full_text = full_text[:end_of_novel]
 
-def get_words_from_book(full_text):
-	all_words = re.findall("[\w'\-]+", full_text)
+#def get_words_from_book(full_text):
+#	all_words = re.findall("[\w'\-]+", full_text)
 	
-def get_word_counts_list(full_text):
-	all_words = re.findall("[\w'\-]+", full_text)
-	for i in range(len(all_words)):
-		
-
-#def get_word_counts_dict(full_text):
-
+#def get_word_counts_list(full_text):
+#	all_words = re.findall("[\w'\-]+", full_text)
+#	for i in range(len(all_words)):
 
 if __name__ == '__main__':
 	word_occurence = []
