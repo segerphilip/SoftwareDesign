@@ -8,4 +8,4 @@ def pair_list_to_dictionary(words):
 		i += 2
 	return d1
 
-print pair_list_to_dictionary(['hello','a','test','b'])
+print pair_list_to_dictionary(['hello','a','test','b', 'unwanted'])
